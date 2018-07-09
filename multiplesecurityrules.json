@@ -2,10 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "NsgName":{
+            "type":"string",
+            "metadata": {
+                "description": "Name of the Network security group"
+            }
+        },
         "securityRules": {
             "type": "array",
             "metadata": {
-                "description": "An array that contains objects with properties for the security rules. For format, see multiplesecurityrules.parameters.json."
+                "description": "An array that contains objects with properties for the security rules. "
             }
         }
     },
@@ -35,7 +41,7 @@
         {
             "apiVersion": "2015-06-15",
             "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "NSG1",
+            "name": "parameters('NsgName')",
             "location": "[resourceGroup().location]",
             "properties": {
                 "securityRules": "[variables('securityRules')]"
