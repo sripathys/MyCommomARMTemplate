@@ -17,7 +17,7 @@
         "vmSize": {
             "type": "string",
             "metadata": {
-                "description": "This parameter corresponds to the size of the Virtual Machine created"
+                "description": "This parameter corresponds to the size of the  Virtual Machine created"
               }
         },
         "vmNetworkInterfaceName": {
@@ -51,13 +51,13 @@
               "No"
             ],
             "metadata": {
-              "description": "This parameter specifies whether a Fully Baked Image is available to create a VM"
+              "description": "This parameter Specifies whether a Fully Baked Image is available to create a VM"
             }
           },       
         "vmFullyBakedImageRef": {
             "type": "string",
             "metadata": {
-              "description": "This parameter speicfies the URI where the Fully Baked Image is stored"
+              "description": "This parameter specifies an URI where the Fully Baked Image is stored"
             }
           },         
           "vmNumDataDisks": {
@@ -70,7 +70,7 @@
             "type": "array",
             "defaultValue": [ 32, 64, 128, 256, 512, 1024, 2048, 4095 ],
             "metadata": {
-              "description": "This parameter specifies the size of data disk in GB"
+              "description": "This parameter speicifies Size of data disk in GB"
             }
           },
           "vmImagePublisher": {
@@ -97,13 +97,13 @@
               "description": "This parameter specifies VM Image Version"
             }
           },         
-          "vmSSHKeyData":{
-              "type": "securestring",
-              "metadata": {
-                  "description": "This parameter specifies ssh Key Data for Linux VMs"
-              }
-          },
-          "vnetNewOrExisting":{
+        "vmSSHKeyData":{
+            "type": "securestring",
+            "metadata": {
+                "description": "This parameter specifies ssh Key Data for Linux VMs"
+            }
+        },
+        "vnetNewOrExisting":{
             "type": "string",
             "metadata": {
                 "description": "This parameter specifies whether a new vnet has to be created or existing vnet will be used "
@@ -174,13 +174,17 @@
             "metadata": {
                 "description": "This parameter specifies nsg rules"
             }
+        },
+        "vmdisablePasswordAuth":{
+              "type": "string",
+              "metadata": {
+                  "description": "This parameter specifies whether Password based Authentication is enabled"
+              }
         }
-       
     },
     "variables": {
     "diskCaching": "ReadWrite",
     "diskCreationOption": "Empty",
-    "disablePasswordAuthentication": "True",
      "copy": [
       {
         "name": "vmDataDisks",
@@ -219,8 +223,8 @@
                     "adminUsername": "[parameters('vmAdminUsername')]",
                     "adminPassword": "[parameters('vmAdminPassword')]",
                     "linuxConfiguration": {
-                        "disablePasswordAuthentication": "[variables('disablePasswordAuthentication')]",
-                         "ssh": {
+                        "disablePasswordAuthentication": "[parameters('vmdisablePasswordAuth')]",
+                        "ssh": {
                           "publicKeys": [
                             {
                               "path": "[concat('/home/', parameters('vmAdminUsername'), '/.ssh/authorized_keys')]",
@@ -230,11 +234,12 @@
                         }
                       }
                 },
+                
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "storageProfile": {
-                    "imageReference": {
+                      "imageReference": {
                         "id": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'), parameters('vmFullyBakedImageRef'), json('null'))]",
                         "publisher": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImagePublisher'), json('null'))]",
                         "offer": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImageOffer'), json('null'))]",
@@ -362,8 +367,10 @@
               }
       
             }
-          }       
-        ],
+          }      
+       
+        
+    ],
     "outputs": {    
     }
 }
