@@ -96,14 +96,7 @@
             "metadata": {
               "description": "This parameter specifies VM Image Version"
             }
-          },
-          "vmDisablePasswordAuth":{
-              "type": "bool",
-              "defaultValue": true,
-              "metadata": {
-                  "decription": "This parameter specifies whether Passowrd Authentication is disabled for Linux VMs"
-              }
-          },
+          },         
           "vmSSHKeyData":{
               "type": "securestring",
               "metadata": {
@@ -225,8 +218,7 @@
                     "adminUsername": "[parameters('vmAdminUsername')]",
                     "adminPassword": "[parameters('vmAdminPassword')]",
                     "linuxConfiguration": {
-                        "disablePasswordAuthentication": true,
-                        "ssh": {
+                         "ssh": {
                           "publicKeys": [
                             {
                               "path": "[concat('/home/', parameters('vmAdminUsername'), '/.ssh/authorized_keys')]",

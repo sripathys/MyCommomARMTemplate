@@ -96,13 +96,7 @@
             "metadata": {
               "description": "This parameter specifies VM Image Version"
             }
-          },
-          "vmDisablePasswordAuth":{
-            "type": "string",
-            "metadata": {
-                "decription": "This parameter specifies whether Passowrd Authentication is disabled for Linux VMs"
-            }
-        },
+          },         
         "vmSSHKeyData":{
             "type": "securestring",
             "metadata": {
