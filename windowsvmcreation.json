@@ -1,0 +1,189 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to the Azure region where the VM will be created"
+              }
+        },
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to the name of the Virtual Machine being created"
+              }
+        },
+        "vmSize": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to the size of the  Virtual Machine created"
+              }
+        },
+        "vmNetworkInterfaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to the network Interface name to which the Virtual Machine will be attached"
+              }
+        },
+        "vmAdminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to the Virtual Machine admin user name "
+              }
+        }, 
+        "vmAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "This parameter corresponds to the Virtual Machine admin password"
+              }
+        },
+        "vmDiagnosticsStorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "This parameter corresponds to storage account name we are going to use for storing Blob Data"
+              }
+        },
+        "vmFullyBakedImageAvl": {
+            "type": "string",
+            "allowedValues": [
+              "Yes",
+              "No"
+            ],
+            "metadata": {
+              "description": "This parameter Specifies whether a Fully Baked Image is available to create a VM"
+            }
+          },       
+        "vmFullyBakedImageRef": {
+            "type": "string",
+            "metadata": {
+              "description": "This parameter specifies an URI where the Fully Baked Image is stored"
+            }
+          },         
+          "vmNumDataDisks": {
+            "type": "int",
+            "metadata": {
+              "description": "This parameter specifies the number of data disks to be attached to the VM"
+            }
+          },    
+          "vmDataDiskSize": {
+            "type": "array",
+            "defaultValue": [ 32, 64, 128, 256, 512, 1024, 2048, 4095 ],
+            "metadata": {
+              "description": "This parameter speicifies Size of data disk in GB"
+            }
+          },
+          "vmImagePublisher": {
+            "type": "string",
+            "metadata": {
+              "description": "This parameter specifies VM Image Publisher Name"
+            }
+          },
+          "vmImageOffer": {
+            "type": "string",
+            "metadata": {
+              "description": "This parameter specifies VM Image Offer Name"
+            }
+          },
+          "vmImageSku": {
+            "type": "string",
+            "metadata": {
+              "description": "This parameter specifies VM Image SKU"
+            }
+          },
+          "vmImageVersion": {
+            "type": "string",
+            "metadata": {
+              "description": "This parameter specifies VM Image Version"
+            }
+          },
+          "vmDisablePasswordAuth":{
+            "type": "string",
+            "metadata": {
+                "decription": "This parameter specifies whether Passowrd Authentication is disabled for Linux VMs"
+            }
+        },
+        "vmSSHKeyData":{
+            "type": "securestring",
+            "metadata": {
+                "description": "This parameter specifies ssh Key Data for Linux VMs"
+            }
+        }       
+    },
+    "variables": {
+    "diskCaching": "ReadWrite",
+    "diskCreationOption": "Empty",
+     "copy": [
+      {
+        "name": "vmDataDisks",
+        "count": "[if(equals(parameters('vmNumDataDisks'),0),1, parameters('vmNumDataDisks'))]",
+        "input": {
+          "caching": "[variables('diskCaching')]",
+          "createOption":  "[variables('diskCreationOption')]",
+          "diskSizeGB": "[parameters('vmDataDiskSize')[copyIndex('countOfDisks')]]",
+          "lun": "[copyIndex('countOfDisks')]",
+          "managedDisk": {
+            "storageAccountType": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'),'Standard_LRS', json('null'))]"
+          }
+          }
+      }
+    ]
+            },
+    "resources": [
+        {
+            "name": "[parameters('vmName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2017-03-30",
+            "location": "[parameters('vmLocation')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('vmNetworkInterfaceName'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('vmAdminUsername')]",
+                    "adminPassword": "[parameters('vmAdminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVmAgent": "true"
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'), parameters('vmFullyBakedImageRef'), json('null'))]",
+                        "publisher": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImagePublisher'), json('null'))]",
+                        "offer": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImageOffer'), json('null'))]",
+                        "sku": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImageSku'), json('null'))]",
+                        "version": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImageVersion'), json('null'))]"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": "[if(equals(parameters('vmNumDataDisks'),0),json('null'),variables('vmDataDisks'))]"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('vmNetworkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId('ExampleGroup', 'Microsoft.Storage/storageAccounts', parameters('vmDiagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+                    }
+                }
+            }
+        }      
+       
+        
+    ],
+    "outputs": {    
+    }
+}
