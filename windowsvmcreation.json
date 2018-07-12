@@ -239,7 +239,6 @@
                     },
                     "osDisk": {
                         "createOption": "FromImage",
-                        "name": "MyNewOSDisk",
                         "managedDisk": {
                             "storageAccountType": "Premium_LRS"
                         }
