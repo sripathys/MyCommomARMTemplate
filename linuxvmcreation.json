@@ -180,6 +180,7 @@
     "variables": {
     "diskCaching": "ReadWrite",
     "diskCreationOption": "Empty",
+    "disablePasswordAuthentication": "True",
      "copy": [
       {
         "name": "vmDataDisks",
@@ -218,7 +219,7 @@
                     "adminUsername": "[parameters('vmAdminUsername')]",
                     "adminPassword": "[parameters('vmAdminPassword')]",
                     "linuxConfiguration": {
-                        "disablePasswordAuthentication":true,
+                        "disablePasswordAuthentication": "[variables('disablePasswordAuthentication')]",
                          "ssh": {
                           "publicKeys": [
                             {
