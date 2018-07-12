@@ -176,7 +176,7 @@
             }
         },
        "vmNsgRules":{
-            "type": "string",
+            "type": "array",
             "metadata": {
                 "description": "This parameter specifies nsg rules"
             }
