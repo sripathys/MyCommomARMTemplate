@@ -98,7 +98,7 @@
             }
           },
           "vmDisablePasswordAuth":{
-              "type": "string",
+              "type": "bool",
               "metadata": {
                   "decription": "This parameter specifies whether Passowrd Authentication is disabled for Linux VMs"
               }
