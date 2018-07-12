@@ -108,7 +108,79 @@
             "metadata": {
                 "description": "This parameter specifies ssh Key Data for Linux VMs"
             }
-        }       
+        },
+        "vnetNewOrExisting":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies whether a new vnet has to be created or existing vnet will be used "
+            }
+        },
+        "vmVnetName":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies vnet name"
+            }
+        },
+        "vmSubnetName":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies subnetName name"
+            }
+        },
+        "vmVnetResourceGroupName":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Resource Group name"
+            }
+        },
+        "vmPublicIpAddressName":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Public IP Address name"
+            }
+        },
+        "DeptNameTag":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies department name Tag"
+            }
+        },
+        "AppNameTag":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Application name Tag"
+            }
+        },
+        "CreatedByTag":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Created By Tag"
+            }
+        },
+        "vmnsgname":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Network Security Group Name"
+            }
+        },
+        "vmPublicIPAddressType":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Public IP Address Type"
+            }
+        },
+        "vmPublicIPAddressSku":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies Public IP Address sku"
+            }
+        },
+       "vmNsgRules":{
+            "type": "string",
+            "metadata": {
+                "description": "This parameter specifies nsg rules"
+            }
+        }
     },
     "variables": {
     "diskCaching": "ReadWrite",
@@ -127,8 +199,10 @@
           }
           }
       }
-    ]
-            },
+    ],
+    "vnettemplink": "[concat('https://raw.githubusercontent.com/sripathys/MyCommomARMTemplate/master/', parameters('vnetNewOrExisting'),'vnet.json')]",
+    "nsgtemplink": "https://raw.githubusercontent.com/sripathys/MyCommomARMTemplate/master/multiplesecurityrules.json"
+    },
     "resources": [
         {
             "name": "[parameters('vmName')]",
@@ -180,7 +254,106 @@
                     }
                 }
             }
-        }      
+        },
+        {
+            "apiVersion": "2015-01-01",
+            "name": "vnet-template",
+            "type": "Microsoft.Resources/deployments",
+             "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('vnettemplink')]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "virtualNetworkName": {
+                  "value": "[parameters('vmVnetName')]"
+                },
+                "subnetName": {
+                  "value": "[parameters('vmSubnetName')]"
+                },
+                "existingVnetResourceGroupName": {
+                  "value": "[parameters('vmVnetResourceGroupName')]"
+                }
+              }
+            }
+          },
+          {
+            "name": "[parameters('vmnetworkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2017-06-01",
+            "location": "[parameters('vmLocation')]",
+            "dependsOn": [
+              "[concat('Microsoft.Network/publicIpAddresses/', parameters('vmPublicIpAddressName'))]",
+              "Microsoft.Resources/deployments/vnet-template"
+            ],
+            "tags": {
+              "Department": "[parameters('DeptNameTag')]",
+              "Application": "[parameters('AppNameTag')]",
+              "Created By": "[parameters('CreatedByTag')]"
+            },
+            "properties": {
+              "ipConfigurations": [
+                {
+                  "name": "ipconfig1",
+                  "properties": {
+                    "subnet": {
+                      "id": "[reference('vnet-template').outputs.subnet1Ref.value]"
+                    },
+                    "privateIPAllocationMethod": "Dynamic",
+                    "publicIpAddress": {
+                      "id": "[resourceId(parameters('vmVnetResourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('vmPublicIpAddressName'))]"
+                    }
+                  }
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId(parameters('vmVnetResourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('vmnsgname'))]"
+              }
+            }
+          },
+          {
+            "name": "[parameters('vmPublicIpAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('vmLocation')]",
+            "tags": {
+              "Department": "[parameters('DeptNameTag')]",
+              "Application": "[parameters('AppNameTag')]",
+              "Created By": "[parameters('CreatedByTag')]"
+            },
+            "properties": {
+              "publicIPAllocationMethod": "[parameters('vmPublicIPAddressType')]"
+            },
+            "sku": {
+              "name": "[parameters('vmPublicIPAddressSku')]"
+            }
+          },
+          {
+            "apiVersion": "2017-05-10",
+            "name": "nsg-template",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[variables('nsgtemplink')]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "networkSecurityGroupName": {
+                  "value": "[parameters('vmnsgname')]"
+                },
+                "location": {
+                  "value": "[parameters('vmlocation')]"
+                },
+                "securityRules": {
+                  "value": "[parameters('vmNsgRules')]"
+                }
+      
+              }
+      
+            }
+          }      
        
         
     ],
