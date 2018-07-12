@@ -264,7 +264,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[reference(resourceId('ExampleGroup', 'Microsoft.Storage/storageAccounts', parameters('vmDiagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+                        "storageUri": "[reference(resourceId(parameters('vmVnetResourceGroupName'), 'Microsoft.Storage/storageAccounts', parameters('vmDiagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
                     }
                 }
             }
