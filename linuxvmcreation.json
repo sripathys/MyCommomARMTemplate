@@ -316,13 +316,13 @@
                     },
                     "privateIPAllocationMethod": "Dynamic",
                     "publicIpAddress": {
-                      "id": "[resourceId(parameters('vmVnetResourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('vmPublicIpAddressName'))]"
+                      "id": "[resourceId('mkl-na-non-prod-dev-linux','Microsoft.Network/publicIpAddresses', parameters('vmPublicIpAddressName'))]"
                     }
                   }
                 }
               ],
               "networkSecurityGroup": {
-                "id": "[resourceId(parameters('vmVnetResourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('vmnsgname'))]"
+                "id": "[resourceId('mkl-na-non-prod-dev-linux', 'Microsoft.Network/networkSecurityGroups', parameters('vmnsgname'))]"
               }
             }
           },
