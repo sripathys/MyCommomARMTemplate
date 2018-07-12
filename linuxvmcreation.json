@@ -210,6 +210,11 @@
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2017-03-30",
             "location": "[parameters('vmLocation')]",
+            "tags": {
+                "Department": "[parameters('DeptNameTag')]",
+                "Application": "[parameters('AppNameTag')]",
+                "Created By": "[parameters('CreatedByTag')]"
+              },
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('vmNetworkInterfaceName'))]"
             ],
