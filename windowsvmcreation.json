@@ -230,7 +230,7 @@
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "storageProfile": {
-                    "imageReference": {
+                      "imageReference": {
                         "id": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'), parameters('vmFullyBakedImageRef'), json('null'))]",
                         "publisher": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImagePublisher'), json('null'))]",
                         "offer": "[if(equals(parameters('vmFullyBakedImageAvl'), 'No'), parameters('vmImageOffer'), json('null'))]",
@@ -239,6 +239,7 @@
                     },
                     "osDisk": {
                         "createOption": "FromImage",
+                        "name": "MyNewOSDisk",
                         "managedDisk": {
                             "storageAccountType": "Premium_LRS"
                         }
