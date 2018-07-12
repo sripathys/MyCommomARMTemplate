@@ -99,6 +99,7 @@
           },
           "vmDisablePasswordAuth":{
               "type": "bool",
+              "defaultValue": true,
               "metadata": {
                   "decription": "This parameter specifies whether Passowrd Authentication is disabled for Linux VMs"
               }
@@ -224,7 +225,7 @@
                     "adminUsername": "[parameters('vmAdminUsername')]",
                     "adminPassword": "[parameters('vmAdminPassword')]",
                     "linuxConfiguration": {
-                        "disablePasswordAuthentication": "[parameters('vmDisablePasswordAuth')]",
+                        "disablePasswordAuthentication": true,
                         "ssh": {
                           "publicKeys": [
                             {
