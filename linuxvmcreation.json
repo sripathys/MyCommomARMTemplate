@@ -176,7 +176,7 @@
             }
         },
         "vmdisablePasswordAuth":{
-              "type": "string",
+              "type": "bool",
               "metadata": {
                   "description": "This parameter specifies whether Password based Authentication is enabled"
               }
