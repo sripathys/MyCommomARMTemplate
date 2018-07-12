@@ -121,8 +121,8 @@
         "input": {
           "caching": "[variables('diskCaching')]",
           "createOption":  "[variables('diskCreationOption')]",
-          "diskSizeGB": "[parameters('vmDataDiskSize')[copyIndex('countOfDisks')]]",
-          "lun": "[copyIndex('countOfDisks')]",
+          "diskSizeGB": "[parameters('vmDataDiskSize')[copyIndex('vmDataDisks')]]",
+          "lun": "[copyIndex('vmDataDisks')]",
           "managedDisk": {
             "storageAccountType": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'),'Standard_LRS', json('null'))]"
           }
