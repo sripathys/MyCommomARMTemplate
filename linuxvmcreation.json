@@ -218,6 +218,7 @@
                     "adminUsername": "[parameters('vmAdminUsername')]",
                     "adminPassword": "[parameters('vmAdminPassword')]",
                     "linuxConfiguration": {
+                        "disablePasswordAuthentication":true,
                          "ssh": {
                           "publicKeys": [
                             {
