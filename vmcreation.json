@@ -168,13 +168,7 @@
             "metadata": {
                 "description": "This parameter specifies Public IP Address sku"
             }
-        },
-       "vmNsgRules":{
-            "type": "array",
-            "metadata": {
-                "description": "This parameter specifies nsg rules"
-            }
-        }
+        }      
         
     },
     "variables": {
@@ -193,24 +187,8 @@
             "storageAccountType": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'),'Standard_LRS', json('null'))]"
           }
           }
-      },
-      {
-        "name": "vmsecurityRules",
-        "count": "[length(parameters('vmNsgRules'))]",
-        "input": {
-            "name": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].name]",
-            "properties": {
-                  "priority": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].priority]",
-                  "protocol": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].protocol]",
-                  "sourcePortRange": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].sourcePortRange]",
-                  "destinationPortRange": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].destinationPortRange]",
-                   "sourceAddressPrefix": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].sourceAddressPrefix]",
-                   "destinationAddressPrefix": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].destinationAddressPrefix]",
-                   "access": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].access]",
-                   "direction": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].direction]"
-            }
-        }
       }
+   
     ],
     "lnxConfiguration": {
         "disablePasswordAuthentication": "True",
@@ -300,17 +278,7 @@
             "sku": {
               "name": "[parameters('vmPublicIPAddressSku')]"
             }
-          },
-          {
-            "apiVersion": "2018-01-01",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "name": "[parameters('vmnsgname')]",
-            "location": "[parameters('vmLocation')]",
-            "properties":{
-                "securityRules": "[variables('vmsecurityRules')]"
-            }
-            
-        },         
+          },                  
         {
             "name": "[parameters('vmName')]",
             "type": "Microsoft.Compute/virtualMachines",
