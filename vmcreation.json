@@ -179,7 +179,7 @@
     },
     "variables": {
     "diskCaching": "ReadWrite",
-    "diskCreationOption": "Empty",
+    "diskCreationOption": "Empty",    
      "copy": [
       {
         "name": "vmDataDisks",
@@ -306,10 +306,10 @@
             "type": "Microsoft.Network/networkSecurityGroups",
             "name": "[parameters('vmnsgname')]",
             "location": "[parameters('vmLocation')]",
-            "properties": {
+            "properties":{
                 "securityRules": "[variables('vmsecurityRules')]"
-                    
             }
+            
         },         
         {
             "name": "[parameters('vmName')]",
