@@ -30,7 +30,7 @@
                 "input": {
                     "name": "[parameters('securityRules')[copyIndex('securityRules')].name]",
                     "properties": {
-                          "priority": "[parameters('securityRules')[copyIndex('securityRules')].priority]",
+                          "priority": "[parameters('securityRules')[copyIndex('securityRules')].properties.priority]",
                           "protocol": "[parameters('securityRules')[copyIndex('securityRules')].protocol]",
                           "sourcePortRange": "[parameters('securityRules')[copyIndex('securityRules')].sourcePortRange]",
                           "destinationPortRange": "[parameters('securityRules')[copyIndex('securityRules')].destinationPortRange]",
