@@ -198,7 +198,7 @@
         "name": "vmsecurityRules",
         "count": "[length(parameters('vmNsgRules'))]",
         "input": {
-            "name": "[parameters('vmNsgRules')[copyIndex('securityRules')].name]",
+            "name": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].name]",
             "properties": {
                   "priority": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].priority]",
                   "protocol": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].protocol]",
