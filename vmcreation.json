@@ -193,6 +193,23 @@
             "storageAccountType": "[if(equals(parameters('vmFullyBakedImageAvl'), 'Yes'),'Standard_LRS', json('null'))]"
           }
           }
+      },
+      {
+        "name": "vmsecurityRules",
+        "count": "[length(parameters('vmNsgRules'))]",
+        "input": {
+            "name": "[parameters('vmNsgRules')[copyIndex('securityRules')].name]",
+            "properties": {
+                  "priority": "[parameters('vmNsgRules')[copyIndex('securityRules')].priority]",
+                  "protocol": "[parameters('vmNsgRules')[copyIndex('securityRules')].protocol]",
+                  "sourcePortRange": "[parameters('vmNsgRules')[copyIndex('securityRules')].sourcePortRange]",
+                  "destinationPortRange": "[parameters('vmNsgRules')[copyIndex('securityRules')].destinationPortRange]",
+                   "sourceAddressPrefix": "[parameters('vmNsgRules')[copyIndex('securityRules')].sourceAddressPrefix]",
+                   "destinationAddressPrefix": "[parameters('vmNsgRules')[copyIndex('securityRules')].destinationAddressPrefix]",
+                   "access": "[parameters('vmNsgRules')[copyIndex('securityRules')].access]",
+                   "direction": "[parameters('vmNsgRules')[copyIndex('securityRules')].direction]"
+            }
+        }
       }
     ],
     "lnxConfiguration": {
@@ -207,7 +224,7 @@
         }
       },
     "vnettemplink": "[concat('https://raw.githubusercontent.com/sripathys/MyCommomARMTemplate/master/', parameters('vnetNewOrExisting'),'vnet.json')]",
-    "nsgtemplink": "https://raw.githubusercontent.com/sripathys/MyCommomARMTemplate/master/multiplesecurityrules.json"
+    
     },
     "resources": [
         {
@@ -285,31 +302,16 @@
             }
           },
           {
-            "apiVersion": "2017-05-10",
-            "name": "nsg-template",
-            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('vmnsgname')]",
+            "location": "[parameters('vmLocation')]",
             "properties": {
-              "mode": "Incremental",
-              "templateLink": {
-                "uri": "[variables('nsgtemplink')]",
-                "contentVersion": "1.0.0.0"
-              },
-              "parameters": {
-                "networkSecurityGroupName": {
-                  "value": "[parameters('vmnsgname')]"
-                },
-                "location": {
-                  "value": "[parameters('vmlocation')]"
-                },
-                "securityRules": {
-                  "value": "[parameters('vmNsgRules')]"
-                }
-      
-              }
-      
+                "securityRules": "[variables('vmsecurityRules')]"
+                    
             }
-          },
-          {
+        },         
+        {
             "name": "[parameters('vmName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2017-03-30",
