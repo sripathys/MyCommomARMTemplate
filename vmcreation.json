@@ -200,14 +200,14 @@
         "input": {
             "name": "[parameters('vmNsgRules')[copyIndex('securityRules')].name]",
             "properties": {
-                  "priority": "[parameters('vmNsgRules')[copyIndex('securityRules')].priority]",
-                  "protocol": "[parameters('vmNsgRules')[copyIndex('securityRules')].protocol]",
-                  "sourcePortRange": "[parameters('vmNsgRules')[copyIndex('securityRules')].sourcePortRange]",
-                  "destinationPortRange": "[parameters('vmNsgRules')[copyIndex('securityRules')].destinationPortRange]",
-                   "sourceAddressPrefix": "[parameters('vmNsgRules')[copyIndex('securityRules')].sourceAddressPrefix]",
-                   "destinationAddressPrefix": "[parameters('vmNsgRules')[copyIndex('securityRules')].destinationAddressPrefix]",
-                   "access": "[parameters('vmNsgRules')[copyIndex('securityRules')].access]",
-                   "direction": "[parameters('vmNsgRules')[copyIndex('securityRules')].direction]"
+                  "priority": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].priority]",
+                  "protocol": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].protocol]",
+                  "sourcePortRange": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].sourcePortRange]",
+                  "destinationPortRange": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].destinationPortRange]",
+                   "sourceAddressPrefix": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].sourceAddressPrefix]",
+                   "destinationAddressPrefix": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].destinationAddressPrefix]",
+                   "access": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].access]",
+                   "direction": "[parameters('vmNsgRules')[copyIndex('vmsecurityRules')].direction]"
             }
         }
       }
