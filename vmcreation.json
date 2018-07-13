@@ -174,13 +174,8 @@
             "metadata": {
                 "description": "This parameter specifies nsg rules"
             }
-        },
-        "vmdisablePasswordAuth":{
-            "type": "bool",
-            "metadata": {
-                "description": "This parameter specifies whether Password based Authentication is enabled"
-            }
-      }
+        }
+        
     },
     "variables": {
     "diskCaching": "ReadWrite",
