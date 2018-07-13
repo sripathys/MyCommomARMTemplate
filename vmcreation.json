@@ -196,7 +196,7 @@
       }
     ],
     "lnxConfiguration": {
-        "disablePasswordAuthentication": "[parameters('vmdisablePasswordAuth')]",
+        "disablePasswordAuthentication": "True",
         "ssh": {
           "publicKeys": [
             {
